@@ -1,0 +1,88 @@
+///////// CATEGORIES
+1. Blockchain: HeartBeat-Based Dynamic Neighbour Management
+	- Send HeartBeat with correct sequence number PERIODICALLY
+	- Receive HeartBeat and forward ServerInfo to its neighbour
+	- Receive ServerInfo and rely ServerInfo to its neighbour
+2. Blockchain: Catch Up Protocol and Blockchain Consensus
+	- Send LAstBlock Message with correct 
+
+
+//////// TASKS
+
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* TASK 1 *-*-*-*-*-*-*-*-*-*-*-*-
+
+- HeartBeat sending
+	· hb|<portnumber>|<sequencenumber>
+	> Seq# (0,...) increasing 1 by 1.
+	> hb is broadcast to all neighbour peers every 2 seconds.
+	> If one peer couldn't set TCP connection with another peer within 2 seconds
+	  it has to retry to send the hb in the next period.
+
+- HeartBeat receiving and ServerInfo sending
+	> Handle hb's as with 'tx' and 'pb' requests.
+	  - Log the corresponding ServerInfo into ServerStatus with current time.
+	  - If a peer has not heard from a Server for 4 seconds, remove that
+	    ServerInfo from ServerSttus.
+	  - If it's the first time Q hears from P, Q should also broadcast
+		    si|<portQ>|<P'sIP>|<portP>	-- TO ALL NEIGHBOURS BUT P
+	  - THEN each thread shouldn't try to connect with another peer for more than 2 secodnds
+
+- ServerInfo receiving and SererInfo relaying
+	> IF server S knows P from before, don't relay.
+	> ELSE relay ServerInfo message to all neighbours except to the originator of the 
+	  ServerInfo message and the server P {DOES P MEAN ALL KNOWN P'S}
+		    si|<ports>|<P'sIP>|<portP>		
+
+///////////////////////// piazza comments ///////////////////////// 
+
+1. Even if you have never heard from that server before, if what you 
+receive is a heartbeat message with a sequence number that is different 
+from 0, you do not broadcast anything. In that case you should only add it to serverstatus.
+
+2. Check for expiry should be conduct only when a heartbeat is received. CHECK TUTORIAL
+OF WEEK 26APRIL - 2MAY		->			QUESTION 174
+
+3. Make sure you have: submission/src/*.java
+
+4. The purpose of sending port number in the hb is that sending them, you can use a 
+   port for receiving messages and another for sending. 
+
+   The purpose of sending port number and IP in the si is that they are NOT YET KNOWN, NEW
+   and might be relayed by a node that's not the sender. (???????)
+
+5. In the hb command, port number is the sender's port.
+
+6. CHECK LAST APRIL TUTORIAL. 
+
+7. We should be listening for the heartbeats on the same port as the heartbeats are sent, 
+   therefore the port is sent with the heartbeat, and is that the port answers go to?
+
+8. SECOND ARGUMENT OF THE SI COMMAND IS THE SENDER, NOT THE ORIGINATOR, SO EVERYTIME IT'S
+   RELAYED, IT MUST BE CHANGED WITH THE NEW SENDER'S DETAILS
+
+9. WTF IS RPC? QUESTION 187
+
+10. When you receive a hb, you add its ServerInfo and date to the hashmap. If you receive 
+    an SI message about a server you haven't heard of before, you also add it to hashmap.
+
+11. Assume messages were sanitized by the client sending the request.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* TASK 2 *-*-*-*-*-*-*-*-*-*-*-*-
+
+QUESTION 180
+QUESTION 184
+
